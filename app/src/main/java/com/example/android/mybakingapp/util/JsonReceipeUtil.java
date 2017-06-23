@@ -1,7 +1,7 @@
 package com.example.android.mybakingapp.util;
 
 import com.example.android.mybakingapp.model.Ingredient;
-import com.example.android.mybakingapp.model.Receipe;
+import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.model.Step;
 
 import org.json.JSONArray;
@@ -19,14 +19,14 @@ public class JsonReceipeUtil {
      * @param receipeJsonStr - json string received from movie server
      * @return - receipe list
      */
-    public static List<Receipe> getReceipeFromJson(String receipeJsonStr) {
-        List<Receipe> parsedReceipeData = new ArrayList<>();
+    public static List<Recipe> getReceipeFromJson(String receipeJsonStr) {
+        List<Recipe> parsedReceipeData = new ArrayList<>();
         try {
             JSONArray items = new JSONArray(receipeJsonStr);
             JSONObject movieObj;
             for (int i = 0; i < items.length(); i++) {
                 movieObj = items.getJSONObject(i);
-                Receipe receipe = new Receipe();
+                Recipe receipe = new Recipe();
                 receipe.setId(Long.parseLong(movieObj.getString("id")));
                 receipe.setName(movieObj.getString("name"));
                 receipe.setServings(movieObj.getInt("servings"));

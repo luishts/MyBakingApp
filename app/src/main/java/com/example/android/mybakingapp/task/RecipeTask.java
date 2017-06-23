@@ -2,18 +2,18 @@ package com.example.android.mybakingapp.task;
 
 import android.os.AsyncTask;
 
-import com.example.android.mybakingapp.model.Receipe;
+import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.util.JsonReceipeUtil;
 import com.example.android.mybakingapp.util.NetworkUtils;
 
 import java.net.URL;
 import java.util.List;
 
-public class ReceipeTask extends AsyncTask<String, Void, List<Receipe>> {
+public class RecipeTask extends AsyncTask<String, Void, List<Recipe>> {
 
     private OnReceipeTaskCompleted mObserver;
 
-    public ReceipeTask(OnReceipeTaskCompleted observer) {
+    public RecipeTask(OnReceipeTaskCompleted observer) {
         this.mObserver = observer;
     }
 
@@ -26,7 +26,7 @@ public class ReceipeTask extends AsyncTask<String, Void, List<Receipe>> {
     }
 
     @Override
-    protected List<Receipe> doInBackground(String... params) {
+    protected List<Recipe> doInBackground(String... params) {
         URL receipeUrl = NetworkUtils.buildReceipeUrl();
         try {
             String jsonReceipeResponse = NetworkUtils.getResponseFromHttpUrl(receipeUrl);
@@ -41,7 +41,7 @@ public class ReceipeTask extends AsyncTask<String, Void, List<Receipe>> {
     }
 
     @Override
-    protected void onPostExecute(List<Receipe> receipes) {
+    protected void onPostExecute(List<Recipe> receipes) {
         if (mObserver != null) {
             mObserver.onTaskCompleted(receipes);
         }
@@ -50,6 +50,6 @@ public class ReceipeTask extends AsyncTask<String, Void, List<Receipe>> {
     public interface OnReceipeTaskCompleted {
         void onTaskCreated();
 
-        void onTaskCompleted(List<Receipe> receipes);
+        void onTaskCompleted(List<Recipe> receipes);
     }
 }

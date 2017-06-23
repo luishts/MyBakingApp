@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by ltorres on 21/06/2017.
  */
 
-public class Receipe implements Parcelable {
+public class Recipe implements Parcelable {
 
     private long id;
     private String name;
@@ -16,19 +16,19 @@ public class Receipe implements Parcelable {
     private int servings;
     private String image;
 
-    public Receipe() {
+    public Recipe() {
 
     }
 
-    public static final Creator<Receipe> CREATOR = new Creator<Receipe>() {
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
         @Override
-        public Receipe createFromParcel(Parcel in) {
-            return new Receipe(in);
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
         }
 
         @Override
-        public Receipe[] newArray(int size) {
-            return new Receipe[size];
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
         }
     };
 
@@ -37,7 +37,7 @@ public class Receipe implements Parcelable {
         return 0;
     }
 
-    protected Receipe(Parcel in) {
+    protected Recipe(Parcel in) {
         id = in.readLong();
         name = in.readString();
         ingredients = in.createTypedArray(Ingredient.CREATOR);

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MyBakingApp</string>
+    <string name="empty_recipe_text">No recipes available</string>
+    <string name="recipe_fragment_title">Recipes</string>
+    <string name="recipe_component_ingredient">Recipe Ingredients</string>
+    <string name="recipe_component_step">Recipe Step Description</string>
+    <string name="recipe_key"></string>
 </resources>

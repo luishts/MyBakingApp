@@ -1,0 +1,4 @@
+<resources>
+    <!-- Recipe UI -->
+    <dimen name="recipe_empty_size">16dp</dimen>
+</resources>
