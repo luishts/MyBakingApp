@@ -8,13 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.RecipeBaseComponent;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by ltorres on 8/22/2016.
@@ -23,32 +26,31 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     private WeakReference<Activity> mContext;
     private List<RecipeBaseComponent> mRecipeComponents;
+    private ComponentClickListener mComponentClickListener;
 
     public RecipeAdapter(Activity mContext, List<RecipeBaseComponent> recipeBaseComponents) {
         this.mContext = new WeakReference<>(mContext);
         setModels(recipeBaseComponents);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgComponentImg;
-        TextView txtComponentName;
+        @BindView(R.id.card_view)
         CardView cardViewMain;
+        @BindView(R.id.recipe_component_img)
+        ImageView imgComponentImg;
+        @BindView(R.id.recipe_component_name)
+        TextView txtComponentName;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            cardViewMain = (CardView) itemView.findViewById(R.id.card_view);
-            imgComponentImg = (ImageView) cardViewMain.findViewById(R.id.recipe_component_img);
-            txtComponentName = (TextView) cardViewMain.findViewById(R.id.recipe_component_name);
-            cardViewMain.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
         }
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.card_view:
-                    Toast.makeText(mContext.get(), "clicou no + " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
-                    break;
+        @OnClick(R.id.card_view)
+        public void onClickComponent() {
+            if (mComponentClickListener != null) {
+                mComponentClickListener.onComponentSelected(getAdapterPosition());
             }
         }
     }
@@ -88,5 +90,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         //    Collections.sort(mSales, Collections.<Sales>reverseOrder());
         //}
         notifyDataSetChanged();
+    }
+
+    public interface ComponentClickListener {
+        void onComponentSelected(int position);
+    }
+
+    public void setComponentClickListener(ComponentClickListener mComponentClickListener) {
+        this.mComponentClickListener = mComponentClickListener;
     }
 }

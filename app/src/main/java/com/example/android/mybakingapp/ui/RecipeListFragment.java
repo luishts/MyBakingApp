@@ -1,6 +1,7 @@
 package com.example.android.mybakingapp.ui;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,8 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
 
     private final int MAX_RECIPE_PER_PAGE = 10;
 
+    private ProgressDialog mProgressDialog;
+
     private RecipeListAdapter mAdapter;
     private CustomRecyclerView mRecyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -44,7 +47,6 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
         mHandler = new Handler();
         mAdapter = new RecipeListAdapter(getActivity(), mRecipes);
@@ -105,6 +107,24 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
     }
 
     /**
+     * show or hide progress spinner while login
+     *
+     * @param show
+     */
+    private void showProgress(final boolean show) {
+        if (show) {
+            mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog.setMessage(getString(R.string.recipe_download_message));
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        } else {
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+        }
+    }
+
+    /**
      * Method loads calls from database and updates adapter
      */
     public void refreshRecipes() {
@@ -113,7 +133,7 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
 
     @Override
     public void onTaskCreated() {
-
+        showProgress(true);
     }
 
     @Override
@@ -129,6 +149,7 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
             }
             scrollListener.resetState();
         }
+        showProgress(false);
     }
 
     @Override

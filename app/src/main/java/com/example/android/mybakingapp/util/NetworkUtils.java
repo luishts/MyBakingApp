@@ -7,12 +7,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 
 public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
+
+    public static Uri getUriFromURL(String url) {
+        Uri uri = null;
+        try {
+            uri = Uri.parse(new URL(url).toURI().toString());
+        } catch (MalformedURLException e1) {
+            e1.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return uri;
+    }
 
     public static URL buildReceipeUrl() {
         Uri builtUri = Uri.parse(Constants.STATIC_RECEIPE_URL).buildUpon().build();

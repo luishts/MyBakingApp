@@ -1,6 +1,7 @@
 package com.example.android.mybakingapp.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +25,7 @@ import component.CustomRecyclerView;
 /**
  * Created by ltorres on 8/22/2016.
  */
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment implements RecipeAdapter.ComponentClickListener {
 
     private String TAG = RecipeFragment.class.getName();
 
@@ -47,21 +48,22 @@ public class RecipeFragment extends Fragment {
             }
         }
         mAdapter = new RecipeAdapter(getActivity(), mRecipeBaseComponents);
+        mAdapter.setComponentClickListener(this);
     }
 
     private void initRecipeComponents() {
         mRecipeBaseComponents = new ArrayList<>();
         RecipeBaseComponent ingredientComponent;
-        if (mRecipe.getIngredients() != null) {
-            ingredientComponent = new RecipeBaseComponent(getString(R.string.recipe_component_ingredient) + ": " + mRecipe.getIngredients().length);
-            mRecipeBaseComponents.add(ingredientComponent);
-        }
         if (mRecipe.getSteps() != null) {
             RecipeBaseComponent stepComponent;
             for (Step step : mRecipe.getSteps()) {
                 stepComponent = new RecipeBaseComponent((step.getId() + 1) + ". " + step.getShortDescription());
                 mRecipeBaseComponents.add(stepComponent);
             }
+        }
+        if (mRecipe.getIngredients() != null) {
+            ingredientComponent = new RecipeBaseComponent(getString(R.string.recipe_component_ingredient) + ": " + mRecipe.getIngredients().length);
+            mRecipeBaseComponents.add(0, ingredientComponent);
         }
     }
 
@@ -85,5 +87,17 @@ public class RecipeFragment extends Fragment {
 
         return rootView;
 
+    }
+
+    @Override
+    public void onComponentSelected(int position) {
+        if (position == 0) {
+            //Ingredient
+        } else {
+            Intent intent = new Intent(getActivity(), StepDetailActivity.class);
+            intent.putExtra(getString(R.string.recipe_key), mRecipe);
+            intent.putExtra(getString(R.string.step_key), position-1);
+            startActivity(intent);
+        }
     }
 }

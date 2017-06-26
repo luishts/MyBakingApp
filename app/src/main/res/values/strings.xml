@@ -4,5 +4,9 @@
     <string name="recipe_fragment_title">Recipes</string>
     <string name="recipe_component_ingredient">Recipe Ingredients</string>
     <string name="recipe_component_step">Recipe Step Description</string>
-    <string name="recipe_key"></string>
+    <string name="recipe_key">recipe_key</string>
+    <string name="component_key">component_key</string>
+    <string name="step_key">step_key</string>
+    <string name="video_key">video_key</string>
+    <string name="recipe_download_message">Downloading recipe list</string>
 </resources>

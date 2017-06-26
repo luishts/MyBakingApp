@@ -16,6 +16,10 @@ import com.example.android.mybakingapp.model.Recipe;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by ltorres on 8/22/2016.
  */
@@ -32,31 +36,26 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         setModels(recipes);
     }
 
-    private class ViewHolderRecipe extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolderRecipe extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.imgRecipeImg)
         ImageView imgRecipeImg;
+        @BindView(R.id.txtRecipeName)
         TextView txtRecipeName;
+        @BindView(R.id.txtServings)
         TextView txtServings;
+        @BindView(R.id.card_view)
         CardView cardViewMain;
 
         public ViewHolderRecipe(View itemView) {
             super(itemView);
-
-            cardViewMain = (CardView) itemView.findViewById(R.id.card_view);
-            imgRecipeImg = (ImageView) cardViewMain.findViewById(R.id.imgRecipeImg);
-            txtRecipeName = (TextView) cardViewMain.findViewById(R.id.txtRecipeName);
-            txtServings = (TextView) cardViewMain.findViewById(R.id.txtServings);
-            cardViewMain.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
         }
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.card_view:
-                    if (mRecipeClickListener != null) {
-                        mRecipeClickListener.onRecipeSelected(getAdapterPosition());
-                    }
-                    break;
+        @OnClick(R.id.card_view)
+        public void onClickRecipe() {
+            if (mRecipeClickListener != null) {
+                mRecipeClickListener.onRecipeSelected(getAdapterPosition());
             }
         }
     }
