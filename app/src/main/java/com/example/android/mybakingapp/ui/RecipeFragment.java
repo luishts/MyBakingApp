@@ -96,7 +96,7 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
         txtIngredientsTitle.setText(getString(R.string.recipe_component_ingredient));
 
-        getActivity().setTitle(getText(R.string.recipe_fragment_title));
+        getActivity().setTitle(mRecipe.getName());
 
         return rootView;
 
