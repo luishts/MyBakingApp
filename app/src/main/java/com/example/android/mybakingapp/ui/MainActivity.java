@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Recipe;
 
-public class MainActivity extends AppCompatActivity implements RecipeListFragment.RecipeListCallback{
+public class MainActivity extends AppCompatActivity implements RecipeListFragment.RecipeListCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
         recipeListFragment.setRecipeListCallback(this);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.recipe_container, recipeListFragment)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -28,6 +29,16 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
         recipeFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.recipe_container, recipeFragment)
+                .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

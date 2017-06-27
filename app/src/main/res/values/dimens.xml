@@ -1,4 +1,6 @@
 <resources>
     <!-- Recipe UI -->
     <dimen name="recipe_empty_size">16dp</dimen>
+    <dimen name="generic_cardview_margin_visible">5dp</dimen>
+    <dimen name="generic_cardview_margin_gone">1dp</dimen>
 </resources>

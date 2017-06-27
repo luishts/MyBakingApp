@@ -32,7 +32,7 @@ import butterknife.Unbinder;
  * Created by ltorres on 26/06/2017.
  */
 
-public class StepDetailFragment extends Fragment {
+public class StepFragment extends Fragment {
 
     @BindView(R.id.playerView)
     public SimpleExoPlayerView mPlayerView;

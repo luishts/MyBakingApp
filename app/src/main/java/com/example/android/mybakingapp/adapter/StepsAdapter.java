@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.mybakingapp.R;
-import com.example.android.mybakingapp.model.RecipeBaseComponent;
+import com.example.android.mybakingapp.model.Step;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -22,15 +22,15 @@ import butterknife.OnClick;
 /**
  * Created by ltorres on 8/22/2016.
  */
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
+public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
 
     private WeakReference<Activity> mContext;
-    private List<RecipeBaseComponent> mRecipeComponents;
-    private ComponentClickListener mComponentClickListener;
+    private List<Step> mSteps;
+    private StepClickListener mStepClickListener;
 
-    public RecipeAdapter(Activity mContext, List<RecipeBaseComponent> recipeBaseComponents) {
+    public StepsAdapter(Activity mContext, List<Step> steps) {
         this.mContext = new WeakReference<>(mContext);
-        setModels(recipeBaseComponents);
+        setModels(steps);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -49,8 +49,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         @OnClick(R.id.card_view)
         public void onClickComponent() {
-            if (mComponentClickListener != null) {
-                mComponentClickListener.onComponentSelected(getAdapterPosition());
+            if (mStepClickListener != null) {
+                mStepClickListener.onStepSelected(getAdapterPosition());
             }
         }
     }
@@ -64,15 +64,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        RecipeBaseComponent recipeBaseComponent = mRecipeComponents.get(position);
+        Step step = mSteps.get(position);
         //viewHolder.imgComponentImg.setImageResource(recipeBaseComponent.getComponentImage());
-        viewHolder.txtComponentName.setText(recipeBaseComponent.getComponentName());
+        viewHolder.txtComponentName.setText((step.getId() + 1) + ". " + step.getShortDescription());
     }
 
     @Override
     public int getItemCount() {
-        if (mRecipeComponents != null) {
-            return mRecipeComponents.size();
+        if (mSteps != null) {
+            return mSteps.size();
         } else {
             return 0;
         }
@@ -82,21 +82,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
      * Method that given a list of calls, finds all different Dates and creates a header for each one. Each header represents
      * a data with a list of calls.
      *
-     * @param recipeBaseComponents
+     * @param steps
      */
-    public void setModels(List<RecipeBaseComponent> recipeBaseComponents) {
-        mRecipeComponents = recipeBaseComponents;
+    public void setModels(List<Step> steps) {
+        mSteps = steps;
         //if (mSales != null && mSales.size() > 0) {
         //    Collections.sort(mSales, Collections.<Sales>reverseOrder());
         //}
         notifyDataSetChanged();
     }
 
-    public interface ComponentClickListener {
-        void onComponentSelected(int position);
+    public interface StepClickListener {
+        void onStepSelected(int position);
     }
 
-    public void setComponentClickListener(ComponentClickListener mComponentClickListener) {
-        this.mComponentClickListener = mComponentClickListener;
+    public void setStepClickListener(StepClickListener mStepClickListener) {
+        this.mStepClickListener = mStepClickListener;
     }
 }

@@ -25,7 +25,7 @@ public class StepDetailActivity extends AppCompatActivity {
     private Step mCurrentStep;
     private int mCurrentStepPosition;
 
-    private StepDetailFragment mStepDetailFragment;
+    private StepFragment mStepFragment;
 
     @BindView(R.id.next_button)
     public ImageView mNextButton;
@@ -55,12 +55,12 @@ public class StepDetailActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mStepDetailFragment = new StepDetailFragment();
+        mStepFragment = new StepFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(getString(R.string.step_key), mCurrentStep);
-        mStepDetailFragment.setArguments(bundle);
+        mStepFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.step_detail_content, mStepDetailFragment)
+                .replace(R.id.step_detail_content, mStepFragment)
                 .commit();
         setupNextAndPreviousButton();
     }
@@ -74,7 +74,7 @@ public class StepDetailActivity extends AppCompatActivity {
         }
         mCurrentStep = mRecipe.getSteps()[mCurrentStepPosition];
         setupNextAndPreviousButton();
-        mStepDetailFragment.changeStep(mCurrentStep);
+        mStepFragment.changeStep(mCurrentStep);
     }
 
     @OnClick(R.id.next_button)
@@ -86,7 +86,7 @@ public class StepDetailActivity extends AppCompatActivity {
         }
         mCurrentStep = mRecipe.getSteps()[mCurrentStepPosition];
         setupNextAndPreviousButton();
-        mStepDetailFragment.changeStep(mCurrentStep);
+        mStepFragment.changeStep(mCurrentStep);
     }
 
     private void setupNextAndPreviousButton(){
