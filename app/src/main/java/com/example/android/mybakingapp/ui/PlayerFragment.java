@@ -38,6 +38,8 @@ import butterknife.Unbinder;
 
 public class PlayerFragment extends Fragment {
 
+    private boolean mTwoPanelMode;
+
     @Nullable
     @BindView(R.id.playerView)
     public SimpleExoPlayerView mPlayerView;
@@ -59,7 +61,10 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        mTwoPanelMode = getResources().getBoolean(R.bool.twoPaneMode);
+
+        if (!mTwoPanelMode && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getActivity().getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

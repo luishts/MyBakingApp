@@ -34,6 +34,10 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
     private String TAG = RecipeFragment.class.getName();
 
+    private boolean mTwoPanelMode;
+
+    private TwoPanelStepClickListener mTwoPanelStepClickListener;
+
     private Unbinder unbinder;
 
     private Recipe mRecipe;
@@ -61,6 +65,8 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mTwoPanelMode = getResources().getBoolean(R.bool.twoPaneMode);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -122,10 +128,21 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
     @Override
     public void onStepSelected(int position) {
         mCurrentStep = position;
-        Intent intent = new Intent(getActivity(), StepDetailActivity.class);
-        intent.putExtra(getString(R.string.recipe_key), mRecipe);
-        intent.putExtra(getString(R.string.step_key), position);
-        startActivity(intent);
+        if (mTwoPanelMode && mTwoPanelStepClickListener != null) {
+            mTwoPanelStepClickListener.onStepTwoPanelSelected(position);
+        } else {
+            Intent intent = new Intent(getActivity(), StepDetailActivity.class);
+            intent.putExtra(getString(R.string.recipe_key), mRecipe);
+            intent.putExtra(getString(R.string.step_key), position);
+            startActivity(intent);
+        }
+    }
 
+    public interface TwoPanelStepClickListener {
+        void onStepTwoPanelSelected(int position);
+    }
+
+    public void setStepClickListener(TwoPanelStepClickListener twoPanelStepClickListener) {
+        this.mTwoPanelStepClickListener = twoPanelStepClickListener;
     }
 }

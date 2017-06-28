@@ -21,6 +21,9 @@
         <activity
             android:name=".ui.StepDetailActivity"
             android:launchMode="singleTop"></activity>
+        <activity
+            android:name=".ui.RecipeActivity"
+            android:launchMode="singleTop"></activity>
     </application>
 
 </manifest>

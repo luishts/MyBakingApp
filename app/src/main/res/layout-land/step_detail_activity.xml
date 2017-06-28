@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/text_current_step"
-    android:orientation="vertical">
+    android:orientation="vertical"
     tools:context="com.example.android.mybakingapp.ui.StepDetailActivity">
 
 
@@ -11,5 +11,5 @@
         android:id="@+id/player_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
+
 </LinearLayout>
