@@ -7,9 +7,10 @@ import com.example.android.mybakingapp.util.JsonReceipeUtil;
 import com.example.android.mybakingapp.util.NetworkUtils;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeTask extends AsyncTask<String, Void, List<Recipe>> {
+public class RecipeTask extends AsyncTask<String, Void, ArrayList<Recipe>> {
 
     private OnReceipeTaskCompleted mObserver;
 
@@ -26,7 +27,7 @@ public class RecipeTask extends AsyncTask<String, Void, List<Recipe>> {
     }
 
     @Override
-    protected List<Recipe> doInBackground(String... params) {
+    protected ArrayList<Recipe> doInBackground(String... params) {
         URL receipeUrl = NetworkUtils.buildReceipeUrl();
         try {
             String jsonReceipeResponse = NetworkUtils.getResponseFromHttpUrl(receipeUrl);
@@ -41,7 +42,7 @@ public class RecipeTask extends AsyncTask<String, Void, List<Recipe>> {
     }
 
     @Override
-    protected void onPostExecute(List<Recipe> receipes) {
+    protected void onPostExecute(ArrayList<Recipe> receipes) {
         if (mObserver != null) {
             mObserver.onTaskCompleted(receipes);
         }
@@ -50,6 +51,6 @@ public class RecipeTask extends AsyncTask<String, Void, List<Recipe>> {
     public interface OnReceipeTaskCompleted {
         void onTaskCreated();
 
-        void onTaskCompleted(List<Recipe> receipes);
+        void onTaskCompleted(ArrayList<Recipe> receipes);
     }
 }

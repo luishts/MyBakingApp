@@ -15,6 +15,6 @@
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_videocam_off_black_48dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

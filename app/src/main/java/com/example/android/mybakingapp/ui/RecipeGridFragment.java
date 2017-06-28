@@ -16,6 +16,7 @@ import com.example.android.mybakingapp.adapter.GridAdapter;
 import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.task.RecipeTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -108,7 +109,7 @@ public class RecipeGridFragment extends Fragment implements RecipeTask.OnReceipe
     }
 
     @Override
-    public void onTaskCompleted(List<Recipe> receipes) {
+    public void onTaskCompleted(ArrayList<Recipe> receipes) {
         mRecipes = receipes;
         mAdapter = new GridAdapter(getActivity(), mRecipes);
         mRecipeGridView.setAdapter(mAdapter);

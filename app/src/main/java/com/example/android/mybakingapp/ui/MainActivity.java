@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Recipe;
+import com.example.android.mybakingapp.util.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
         ButterKnife.bind(this);
 
         if (mRecipeGridContainer != null) {
-
             RecipeGridFragment recipeGridFragment = new RecipeGridFragment();
             recipeGridFragment.setRecipeGridCallback(this);
             getSupportFragmentManager().beginTransaction()
@@ -39,24 +39,34 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
             getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
                 @Override
                 public void onBackStackChanged() {
-                    int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
-                    if (stackHeight > 1) { // if we have something on the stack (doesn't include the current shown fragment)
-                        getSupportActionBar().setHomeButtonEnabled(true);
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    } else {
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        getSupportActionBar().setHomeButtonEnabled(false);
-                    }
+                    setActionBar();
                 }
-
             });
 
-            RecipeListFragment recipeListFragment = new RecipeListFragment();
-            recipeListFragment.setRecipeListCallback(this);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.recipe_list_container, recipeListFragment)
-                    .addToBackStack(null)
-                    .commit();
+            FragmentManager fm = getSupportFragmentManager();
+            RecipeListFragment recipeListFragment = (RecipeListFragment) fm.findFragmentByTag(Constants.RECIPE_LIST_FRAGMENT);
+            if (recipeListFragment == null) {
+                recipeListFragment = new RecipeListFragment();
+                recipeListFragment.setRecipeListCallback(this);
+                fm.beginTransaction().replace(R.id.recipe_list_container, recipeListFragment, Constants.RECIPE_LIST_FRAGMENT)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                recipeListFragment.setRecipeListCallback(this);
+            }
+        }
+
+        setActionBar();
+    }
+
+    private void setActionBar() {
+        int stackHeight = getSupportFragmentManager().getBackStackEntryCount();
+        if (stackHeight > 1) { // if we have something on the stack (doesn't include the current shown fragment)
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
         }
     }
 

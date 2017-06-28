@@ -18,7 +18,7 @@ import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.task.RecipeTask;
 import com.example.android.mybakingapp.util.Constants;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import component.CustomRecyclerView;
 import component.EndlessRecyclerViewScrollListener;
@@ -39,7 +39,7 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
     private CustomRecyclerView mRecyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    private List<Recipe> mRecipes;
+    private ArrayList<Recipe> mRecipes;
     private RecipeListCallback mRecipeListCallback;
 
     private Handler mHandler;
@@ -47,11 +47,13 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mHandler = new Handler();
         mAdapter = new RecipeListAdapter(getActivity(), mRecipes);
         mAdapter.setRecipeClickListener(this);
+
+        setRetainInstance(true);
         new RecipeTask(RecipeListFragment.this).execute();
+
     }
 
     @Override
@@ -137,8 +139,14 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
     }
 
     @Override
-    public void onTaskCompleted(List<Recipe> receipes) {
+    public void onTaskCompleted(ArrayList<Recipe> receipes) {
         mRecipes = receipes;
+        setAdapterList();
+        scrollListener.resetState();
+        showProgress(false);
+    }
+
+    private void setAdapterList() {
         if (mAdapter != null) {
             if (mRecipes != null && mRecipes.size() > MAX_RECIPE_PER_PAGE) {
                 mAdapter.setModels(mRecipes.subList(0, MAX_RECIPE_PER_PAGE));
@@ -147,9 +155,7 @@ public class RecipeListFragment extends Fragment implements RecipeTask.OnReceipe
             } else {
                 mAdapter.setModels(null);
             }
-            scrollListener.resetState();
         }
-        showProgress(false);
     }
 
     @Override

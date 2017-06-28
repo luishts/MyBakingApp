@@ -121,12 +121,11 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
     @Override
     public void onStepSelected(int position) {
-        if (position != mCurrentStep) {
-            mCurrentStep = position;
-            Intent intent = new Intent(getActivity(), StepDetailActivity.class);
-            intent.putExtra(getString(R.string.recipe_key), mRecipe);
-            intent.putExtra(getString(R.string.step_key), position);
-            startActivity(intent);
-        }
+        mCurrentStep = position;
+        Intent intent = new Intent(getActivity(), StepDetailActivity.class);
+        intent.putExtra(getString(R.string.recipe_key), mRecipe);
+        intent.putExtra(getString(R.string.step_key), position);
+        startActivity(intent);
+
     }
 }

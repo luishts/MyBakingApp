@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class JsonReceipeUtil {
 
@@ -19,8 +18,8 @@ public class JsonReceipeUtil {
      * @param receipeJsonStr - json string received from movie server
      * @return - receipe list
      */
-    public static List<Recipe> getReceipeFromJson(String receipeJsonStr) {
-        List<Recipe> parsedReceipeData = new ArrayList<>();
+    public static ArrayList<Recipe> getReceipeFromJson(String receipeJsonStr) {
+        ArrayList<Recipe> parsedReceipeData = new ArrayList<>();
         try {
             JSONArray items = new JSONArray(receipeJsonStr);
             JSONObject movieObj;
