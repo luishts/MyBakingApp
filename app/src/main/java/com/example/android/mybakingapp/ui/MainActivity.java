@@ -97,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements RecipeListFragmen
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
