@@ -43,19 +43,8 @@ public class StepDetailActivity extends AppCompatActivity {
     private Recipe mRecipe;
     private Step mCurrentStep;
     private int mCurrentStepPosition;
-    private SimpleExoPlayer mExoPlayer;
 
-    @Nullable
-    @BindView(R.id.playerView)
-    public SimpleExoPlayerView mPlayerView;
-
-    @Nullable
-    @BindView(R.id.iv_no_video)
-    public ImageView mErrorView;
-
-    @Nullable
-    @BindView(R.id.step_description)
-    public TextView mStepDescription;
+    private PlayerFragment mPlayerFragment;
 
     @Nullable
     @BindView(R.id.next_button)
@@ -106,15 +95,18 @@ public class StepDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
-    }
-
     private void initUI() {
         setTitle(mRecipe.getName());
-        setupPlayer();
+        setupButtons();
+        mPlayerFragment = new PlayerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(getString(R.string.step_key), mCurrentStep);
+        mPlayerFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.player_container, mPlayerFragment)
+                .addToBackStack(null)
+                .commit();
+
     }
 
     @Optional
@@ -127,7 +119,7 @@ public class StepDetailActivity extends AppCompatActivity {
         }
         mCurrentStep = mRecipe.getSteps()[mCurrentStepPosition];
         setupButtons();
-        changeStep(mCurrentStep);
+        mPlayerFragment.changeStep(mCurrentStep);
     }
 
     @Optional
@@ -140,28 +132,7 @@ public class StepDetailActivity extends AppCompatActivity {
         }
         mCurrentStep = mRecipe.getSteps()[mCurrentStepPosition];
         setupButtons();
-        changeStep(mCurrentStep);
-    }
-
-    public void changeStep(Step step) {
-        releasePlayer();
-        mCurrentStep = step;
-        setupPlayer();
-    }
-
-    public void setupPlayer() {
-        if (mStepDescription != null) {
-            mStepDescription.setText(mCurrentStep.getDescription());
-        }
-        setupButtons();
-        Uri videoUri = NetworkUtils.getUriFromURL(mCurrentStep.getVideoURL());
-        if (videoUri != null) {
-            initializePlayer(videoUri);
-            showErrorView(false);
-        } else {
-            mPlayerView.setVisibility(View.GONE);
-            showErrorView(true);
-        }
+        mPlayerFragment.changeStep(mCurrentStep);
     }
 
     @Override
@@ -170,19 +141,6 @@ public class StepDetailActivity extends AppCompatActivity {
         outState.putParcelable(Constants.CURRENT_RECIPE, mRecipe);
         outState.putInt(Constants.CURRENT_STEP_POSITION, mCurrentStepPosition);
     }
-
-    private void showErrorView(boolean show) {
-        if (mErrorView != null) {
-            if (show) {
-                mErrorView.setVisibility(View.VISIBLE);
-                mPlayerView.setVisibility(View.GONE);
-            } else {
-                mErrorView.setVisibility(View.GONE);
-                mPlayerView.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
 
     private void setupButtons() {
         if (mTextBefore != null && mTextNext != null && mTextCurrentStep != null) {
@@ -203,36 +161,4 @@ public class StepDetailActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Initialize ExoPlayer.
-     *
-     * @param mediaUri The URI of the sample to play.
-     */
-    private void initializePlayer(Uri mediaUri) {
-        if (mExoPlayer == null) {
-            // Create an instance of the ExoPlayer.
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
-            mPlayerView.setPlayer(mExoPlayer);
-
-            // Prepare the MediaSource.
-            String userAgent = Util.getUserAgent(this, "ClassicalMusicQuiz");
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    this, userAgent), new DefaultExtractorsFactory(), null, null);
-            mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
-        }
-    }
-
-    /**
-     * Release ExoPlayer.
-     */
-    private void releasePlayer() {
-        if (mExoPlayer != null) {
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer = null;
-        }
-    }
 }

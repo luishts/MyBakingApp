@@ -35,17 +35,10 @@
                 android:layout_below="@id/text_current_step"
                 android:orientation="vertical">
 
-                <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                    android:id="@+id/playerView"
+                <FrameLayout
+                    android:id="@+id/player_container"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp" />
-
-                <ImageView
-                    android:id="@+id/iv_no_video"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_videocam_off_black_48dp" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/step_description"
