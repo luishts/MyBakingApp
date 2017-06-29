@@ -4,7 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.example.android.mybakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.adapter.GridAdapter;
 import com.example.android.mybakingapp.adapter.RecipeListAdapter;
@@ -58,6 +62,22 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     private EndlessRecyclerViewScrollListener scrollListener;
 
     private final int MAX_RECIPE_PER_PAGE = 10;
+
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
                 mGridAdapter.notifyDataSetChanged();
             }
         } else {
+            if (mIdlingResource != null) {
+                mIdlingResource.setIdleState(false);
+            }
             showProgress(true);
             BakingApiService bakingApiService = BakingApiService.retrofit.create(BakingApiService.class);
             Call<JsonArray> jsonCall = bakingApiService.recipesJson();
@@ -141,6 +164,10 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
                         mGridAdapter.notifyDataSetChanged();
                     }
                     showProgress(false);
+
+                    if (mIdlingResource != null) {
+                        mIdlingResource.setIdleState(true);
+                    }
                 }
 
                 @Override
@@ -149,6 +176,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
                 }
             });
         }
+
+        // Get the IdlingResource instance
+        getIdlingResource();
 
         setTitle(getString(R.string.recipe_activity_title));
     }
