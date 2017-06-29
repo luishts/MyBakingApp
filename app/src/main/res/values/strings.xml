@@ -11,4 +11,5 @@
     <string name="ingredients_key">ingredients_key</string>
     <string name="video_key">video_key</string>
     <string name="recipe_download_message">Downloading recipe list</string>
+    <string name="serving">Serves</string>
 </resources>

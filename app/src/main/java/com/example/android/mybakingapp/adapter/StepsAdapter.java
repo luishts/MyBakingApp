@@ -65,8 +65,11 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Step step = mSteps.get(position);
-        //viewHolder.imgComponentImg.setImageResource(recipeBaseComponent.getComponentImage());
-        viewHolder.txtComponentName.setText((step.getId() + 1) + ". " + step.getShortDescription());
+        if (position != 0) {
+            viewHolder.txtComponentName.setText((step.getId()) + ". " + step.getShortDescription());
+        } else {
+            viewHolder.txtComponentName.setText(step.getShortDescription());
+        }
     }
 
     @Override

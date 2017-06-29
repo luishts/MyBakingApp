@@ -37,8 +37,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.txt_description)
-        TextView txtDescription;
+        @BindView(R.id.txt_quantity)
+        TextView txtQuantity;
+
+        @BindView(R.id.txt_measure)
+        TextView txtMeasure;
+
+        @BindView(R.id.txt_ingredient)
+        TextView txtIngredient;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -62,7 +68,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
             stringBuilder.append(ingredient.getQuantity()).append(" ")
                     .append(ingredient.getMeasure()).append(" ")
                     .append(ingredient.getIngredient());
-            holder.txtDescription.setText(stringBuilder.toString());
+            holder.txtQuantity.setText(String.valueOf(ingredient.getQuantity()));
+            holder.txtMeasure.setText(ingredient.getMeasure());
+            holder.txtIngredient.setText(ingredient.getIngredient());
         }
     }
 

@@ -114,9 +114,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Recipe recipe = mRecipes.get(position);
 
         if (null != recipe) {
-            //holder.imgRecipeImg.
             holder.txtRecipeName.setText(recipe.getName());
-            holder.txtServings.setText(String.valueOf(recipe.getServings()));
+            holder.txtServings.setText(mContext.get().getString(R.string.serving) + " " + String.valueOf(recipe.getServings()));
         }
     }
 
