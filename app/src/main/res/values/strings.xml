@@ -12,4 +12,9 @@
     <string name="video_key">video_key</string>
     <string name="recipe_download_message">Downloading recipe list</string>
     <string name="serving">Serves</string>
+    <string name="appwidget_text">Touch to Select Recipe</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_click">widget_click</string>
+    <string name="widget_ingredients">widget_ingredients</string>
+
 </resources>

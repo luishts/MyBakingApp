@@ -20,10 +20,20 @@
         </activity>
         <activity
             android:name=".ui.StepDetailActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.RecipeActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
+
+        <receiver android:name=".BakingWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baking_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

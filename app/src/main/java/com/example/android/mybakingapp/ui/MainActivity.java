@@ -1,9 +1,12 @@
 package com.example.android.mybakingapp.ui;
 
 import android.app.ProgressDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -15,11 +18,14 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
+import com.example.android.mybakingapp.BakingWidgetProvider;
 import com.example.android.mybakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.adapter.GridAdapter;
 import com.example.android.mybakingapp.adapter.RecipeListAdapter;
+import com.example.android.mybakingapp.model.Ingredient;
 import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.retrofit.BakingApiService;
 import com.example.android.mybakingapp.util.Constants;
@@ -29,7 +35,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
 
     private Handler mHandler;
     private ProgressDialog mProgressDialog;
+
+    private boolean isClickFromWidget;
 
     private ArrayList<Recipe> mRecipeList;
 
@@ -84,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getBoolean(getString(R.string.widget_click))) {
+            isClickFromWidget = true;
+        }
 
         if (mListView != null) {
             mHandler = new Handler();
@@ -229,9 +243,31 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     }
 
     public void onRecipeSelected(Recipe recipe) {
-        Intent intent = new Intent(this, RecipeActivity.class);
-        intent.putExtra(getString(R.string.recipe_key), recipe);
-        startActivity(intent);
+        if (isClickFromWidget) {
+            AppWidgetManager manager = AppWidgetManager.getInstance(this);
+            int[] widgets = manager.getAppWidgetIds(new ComponentName(this, BakingWidgetProvider.class));
+
+            for (int widget : widgets) {
+                Log.d(TAG, "widget + clicked_recipe");
+                Set<String> ingredientSet = new HashSet<>();
+                for (int i = 0; i < recipe.getIngredients().length; i++) {
+                    Ingredient ingredient = recipe.getIngredients()[i];
+                    ingredientSet.add(ingredient.getQuantity() + " " + ingredient.getMeasure() + " - " + ingredient.getIngredient());
+                }
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putStringSet(getString(R.string.widget_ingredients), ingredientSet).commit();
+                Intent widgetUpdater = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                widgetUpdater.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widget);
+                sendBroadcast(widgetUpdater);
+            }
+
+            Toast.makeText(this, "widget adicionado", Toast.LENGTH_LONG).show();
+
+        } else {
+            Intent intent = new Intent(this, RecipeActivity.class);
+            intent.putExtra(getString(R.string.recipe_key), recipe);
+            startActivity(intent);
+        }
     }
 
     @Override
