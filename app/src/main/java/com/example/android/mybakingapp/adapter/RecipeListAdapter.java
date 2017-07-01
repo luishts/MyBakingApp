@@ -3,6 +3,7 @@ package com.example.android.mybakingapp.adapter;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Recipe;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by ltorres on 8/22/2016.
+ * Adapter for all Recipes from server. Displays image, name and servings
  */
 public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -104,7 +106,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     /**
-     * Method that fills a row with all information of a Call
+     * Method that fills a row with all information of a Recipe
      *
      * @param holder
      * @param position
@@ -112,10 +114,16 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void configureViewHolderRecipe(ViewHolderRecipe holder, int position) {
 
         Recipe recipe = mRecipes.get(position);
-
         if (null != recipe) {
             holder.txtRecipeName.setText(recipe.getName());
             holder.txtServings.setText(mContext.get().getString(R.string.serving) + " " + String.valueOf(recipe.getServings()));
+            if (!TextUtils.isEmpty(recipe.getImage())) {
+                Picasso.with(mContext.get())
+                        .load(recipe.getImage())
+                        .placeholder(R.drawable.ic_local_dining_black_48dp)
+                        .error(R.drawable.ic_local_dining_black_48dp)
+                        .into(holder.imgRecipeImg);
+            }
         }
     }
 
@@ -147,22 +155,13 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return count;
     }
 
-    /**
-     * Method that given a list of calls, finds all different Dates and creates a header for each one. Each header represents
-     * a data with a list of calls.
-     *
-     * @param recipes
-     */
     public void setModels(List<Recipe> recipes) {
         mRecipes = recipes;
-        //if (mSales != null && mSales.size() > 0) {
-        //    Collections.sort(mSales, Collections.<Sales>reverseOrder());
-        //}
         notifyDataSetChanged();
     }
 
     /**
-     * Method that add to current list of sales, more sales from database because user is scrolling the list
+     * Method that add to current list of recipes, more recipes because user is scrolling the list
      *
      * @param newRecipes
      */
@@ -175,7 +174,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     /**
-     * Method that add a spinner while loading new items from database
+     * Method that add a spinner while loading new items from list
      */
     public void addLoadingItem() {
         mRecipes.add(null);
@@ -183,7 +182,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     /**
-     * Method that remove the spinner after loading new items from database is finished
+     * Method that remove the spinner after loading new items from the list is finished
      */
     private void removeLoadingItem() {
         mRecipes.remove(mRecipes.size() - 1);

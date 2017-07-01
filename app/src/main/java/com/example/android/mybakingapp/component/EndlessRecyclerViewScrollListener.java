@@ -1,4 +1,4 @@
-package component;
+package com.example.android.mybakingapp.component;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import com.example.android.mybakingapp.adapter.RecipeListAdapter;
 
 /**
- * Created by Luis on 23/01/2017.
+ * Implementation of 'EndlesScroll' to show load all items in memory at the same time
  */
 
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {

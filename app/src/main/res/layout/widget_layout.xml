@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/colorAccent"
-            android:textSize="24sp" />
+            android:textSize="@dimen/widget_title_size" />
     </LinearLayout>
 
     <ListView

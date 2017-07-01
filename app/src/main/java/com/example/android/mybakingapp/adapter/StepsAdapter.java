@@ -20,12 +20,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by ltorres on 8/22/2016.
+ * Adapter that shows all the steps from a Recipe. Displays id and short description
  */
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
 
-    private WeakReference<Activity> mContext;
     private List<Step> mSteps;
+    private WeakReference<Activity> mContext;
     private StepClickListener mStepClickListener;
 
     public StepsAdapter(Activity mContext, List<Step> steps) {
@@ -81,17 +81,8 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
         }
     }
 
-    /**
-     * Method that given a list of calls, finds all different Dates and creates a header for each one. Each header represents
-     * a data with a list of calls.
-     *
-     * @param steps
-     */
     public void setModels(List<Step> steps) {
         mSteps = steps;
-        //if (mSales != null && mSales.size() > 0) {
-        //    Collections.sort(mSales, Collections.<Sales>reverseOrder());
-        //}
         notifyDataSetChanged();
     }
 

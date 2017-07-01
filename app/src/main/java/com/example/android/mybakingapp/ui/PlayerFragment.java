@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Step;
-import com.example.android.mybakingapp.util.NetworkUtils;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -27,13 +27,14 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by Luis on 27/06/2017.
+ * Fragment that displays a ExoPlayer + Step description at phone portrait or tablet and full screen ExoPlayer for phone landscape
  */
 
 public class PlayerFragment extends Fragment {
@@ -106,7 +107,14 @@ public class PlayerFragment extends Fragment {
         if (mStepDescription != null) {
             mStepDescription.setText(mCurrentStep.getDescription());
         }
-        Uri videoUri = NetworkUtils.getUriFromURL(mCurrentStep.getVideoURL());
+        if (!TextUtils.isEmpty(mCurrentStep.getThumbnailURL())) {
+            Picasso.with(getContext())
+                    .load(mCurrentStep.getThumbnailURL())
+                    .placeholder(R.drawable.ic_videocam_off_black_48dp)
+                    .error(R.drawable.ic_videocam_off_black_48dp)
+                    .into(mErrorView);
+        }
+        Uri videoUri = com.example.android.mybakingapp.util.Util.getUriFromURL(mCurrentStep.getVideoURL());
         if (videoUri != null) {
             initializePlayer(videoUri);
             showErrorView(false);

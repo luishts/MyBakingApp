@@ -1,7 +1,7 @@
 package com.example.android.mybakingapp.adapter;
 
 /**
- * Created by Luis on 28/05/2016.
+ * Adapter from Ingredients from a given Recipe. Displays quantity, measure and name.
  */
 
 import android.app.Activity;
@@ -24,8 +24,6 @@ import butterknife.ButterKnife;
  * Created by ltorres on 3/28/2016.
  */
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
-
-    private String TAG = IngredientAdapter.class.getName();
 
     private List<Ingredient> mIngredients;
     private WeakReference<Activity> mContext;

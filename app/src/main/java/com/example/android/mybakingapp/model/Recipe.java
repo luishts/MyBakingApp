@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by ltorres on 21/06/2017.
+ * Model that represents a Recipe
  */
 
 public class Recipe implements Parcelable {

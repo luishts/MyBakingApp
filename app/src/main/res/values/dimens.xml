@@ -3,10 +3,28 @@
     <dimen name="recipe_empty_size">16dp</dimen>
     <dimen name="generic_cardview_margin_visible">5dp</dimen>
     <dimen name="generic_cardview_margin_gone">1dp</dimen>
-
-    <!--
-Refer to App Widget Documentation for margin information
-http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
-    -->
+    <dimen name="main_activity_padding_top">8dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_text_size">16sp</dimen>
+    <dimen name="widget_title_size">24sp</dimen>
+    <dimen name="grid_view_padding">16dp</dimen>
+    <dimen name="grid_view_spacing">16dp</dimen>
+    <dimen name="grid_item_height">80dp</dimen>
+    <dimen name="recipe_name_text_size">24sp</dimen>
+    <dimen name="recipe_servings_text_size">16sp</dimen>
+    <dimen name="ingredient_text_margin">16dp</dimen>
+    <dimen name="ingredient_text_size">18sp</dimen>
+    <dimen name="player_fragment_margin">16dp</dimen>
+    <dimen name="player_fragment_height">300dp</dimen>
+    <dimen name="img_no_video_size">48dp</dimen>
+    <dimen name="recipe_component_margin">5dp</dimen>
+    <dimen name="recipe_component_card_radius">2dp</dimen>
+    <dimen name="recipe_component_content_padding">10dp</dimen>
+    <dimen name="recipe_img_size">36dp</dimen>
+    <dimen name="recipe_component_text_size">16sp</dimen>
+    <dimen name="step_list_margin_top">8dp</dimen>
+    <dimen name="step_title_margin_top">16sp</dimen>
+    <dimen name="step_title_text_size">22sp</dimen>
+    <dimen name="navigation_view_margin">16dp</dimen>
+    <dimen name="navigation_view_img_size">48dp</dimen>
 </resources>

@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
- * Created by Luis on 27/06/2017.
+ * GridAdapter used by Tablets. Displays all recipes from server.
  */
 
 public class GridAdapter extends BaseAdapter {

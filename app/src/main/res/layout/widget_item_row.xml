@@ -8,8 +8,8 @@
         android:id="@+id/txt_ingredient_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:textColor="#000000"
-        android:textSize="16sp" />
+        android:layout_marginLeft="@dimen/widget_margin"
+        android:layout_marginStart="@dimen/widget_margin"
+        android:textColor="@color/widget_text_color"
+        android:textSize="@dimen/widget_text_size" />
 </RelativeLayout>

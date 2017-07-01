@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/iv_no_video"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/img_no_video_size"
+        android:layout_height="@dimen/img_no_video_size"
         android:layout_gravity="center"
         android:src="@drawable/ic_videocam_off_black_48dp"
         android:visibility="gone" />

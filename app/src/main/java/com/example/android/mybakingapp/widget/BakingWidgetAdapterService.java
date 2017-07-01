@@ -1,16 +1,17 @@
-package com.example.android.mybakingapp;
+package com.example.android.mybakingapp.widget;
 
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.util.Constants;
 
 import java.util.ArrayList;
 
 /**
- * Created by Luis on 29/06/2017.
+ * Implementation of a RemoteViewsService to handle a list of ingredients into a ListView
  */
 
 public class BakingWidgetAdapterService extends RemoteViewsService {

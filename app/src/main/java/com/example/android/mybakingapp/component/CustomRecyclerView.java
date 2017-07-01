@@ -1,4 +1,4 @@
-package component;
+package com.example.android.mybakingapp.component;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Created by Luis on 21/11/2016.
+ * Custom RecyclerView used to show an empty textview when the list is empty
  */
 
 public class CustomRecyclerView extends RecyclerView {
@@ -39,7 +39,7 @@ public class CustomRecyclerView extends RecyclerView {
     }
 
     public CustomRecyclerView(Context context, AttributeSet attrs,
-                             int defStyle) {
+                              int defStyle) {
         super(context, attrs, defStyle);
     }
 

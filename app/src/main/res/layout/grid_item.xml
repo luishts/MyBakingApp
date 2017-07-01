@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="#FFE7E7E7"
+    android:layout_height="@dimen/grid_item_height"
+    android:background="@color/grid_view_background"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
@@ -14,8 +14,8 @@
         android:layout_gravity="center_vertical"
         android:ellipsize="end"
         android:gravity="center_horizontal"
-        android:maxLines="1"
-        android:textColor="#000000"
-        android:textSize="24sp"
+        android:maxLines="@integer/recipe_name_max_lines"
+        android:textColor="@color/recipe_name_text_color"
+        android:textSize="@dimen/recipe_name_text_size"
         tools:text="Nutella Pie" />
 </LinearLayout>

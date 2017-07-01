@@ -1,11 +1,9 @@
 package com.example.android.mybakingapp.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,19 +11,6 @@ import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.model.Step;
 import com.example.android.mybakingapp.util.Constants;
-import com.example.android.mybakingapp.util.NetworkUtils;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +18,8 @@ import butterknife.OnClick;
 import butterknife.Optional;
 
 /**
- * Created by ltorres on 26/06/2017.
+ * Activity that holds a reference for ExoPlayer fragment and shows two buttons for next step
+ * and previous step (portrait). For landscape, it shows the ExoPlayer fragment with fullscreen set.
  */
 
 public class StepDetailActivity extends AppCompatActivity {

@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:columnWidth="120dp"
     android:gravity="center"
-    android:horizontalSpacing="16dp"
-    android:numColumns="2"
-    android:padding="16dp"
+    android:horizontalSpacing="@dimen/grid_view_spacing"
+    android:numColumns="@integer/grid_view_columns"
+    android:padding="@dimen/grid_view_padding"
     android:stretchMode="columnWidth"
-    android:verticalSpacing="16dp" />
+    android:verticalSpacing="@dimen/grid_view_spacing" />

@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#e7e7e7</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
+    <color name="grid_view_background">#FFE7E7E7</color>
+    <color name="recipe_name_text_color">#000000</color>
+    <color name="ingredient_text_color">#000000</color>
+    <color name="widget_text_color">#000000</color>
+
+
 </resources>

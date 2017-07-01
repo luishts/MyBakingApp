@@ -17,14 +17,16 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.android.mybakingapp.BakingWidgetProvider;
 import com.example.android.mybakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.adapter.GridAdapter;
 import com.example.android.mybakingapp.adapter.RecipeListAdapter;
+import com.example.android.mybakingapp.component.CustomRecyclerView;
+import com.example.android.mybakingapp.component.EndlessRecyclerViewScrollListener;
 import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.retrofit.BakingApiService;
 import com.example.android.mybakingapp.util.Constants;
+import com.example.android.mybakingapp.widget.BakingWidgetProvider;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
@@ -35,11 +37,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import component.CustomRecyclerView;
-import component.EndlessRecyclerViewScrollListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+/**
+ * MainActivity that displays a list (phone) or a grid (tablet) of recipes and also handles widgets clicks
+ */
 
 public class MainActivity extends AppCompatActivity implements RecipeListAdapter.RecipeClickListener {
 
@@ -48,23 +52,20 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     private Handler mHandler;
     private ProgressDialog mProgressDialog;
 
+    private int mWidgetId;
     private boolean isClickFromWidget;
 
-    private int mWidgetId;
-
     private ArrayList<Recipe> mRecipeList;
-
-    private GridAdapter mGridAdapter;
 
     @Nullable
     @BindView(R.id.gridview)
     public GridView mRecipeGridView;
-
-    private RecipeListAdapter mAdapter;
+    private GridAdapter mGridAdapter;
 
     @Nullable
     @BindView(R.id.recyclerView)
     public CustomRecyclerView mListView;
+    private RecipeListAdapter mAdapter;
     private EndlessRecyclerViewScrollListener scrollListener;
 
     private final int MAX_RECIPE_PER_PAGE = 10;
@@ -132,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
             mListView.setAdapter(mAdapter);
 
         } else if (mRecipeGridView != null) {
-
             mRecipeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -143,15 +143,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
 
         if (savedInstanceState != null) {
             mRecipeList = savedInstanceState.getParcelableArrayList(Constants.RECIPE_LIST);
-            if (mListView != null) {
-                setRecipeList();
-                scrollListener.resetState();
-            } else if (mRecipeGridView != null) {
-                mGridAdapter = new GridAdapter(MainActivity.this, mRecipeList);
-                mRecipeGridView.setAdapter(mGridAdapter);
-                mGridAdapter.notifyDataSetChanged();
-            }
+            initUI();
         } else {
+            //used for Espresso tests, set mIdlingResource to busy while downloading recipes list
             if (mIdlingResource != null) {
                 mIdlingResource.setIdleState(false);
             }
@@ -165,17 +159,9 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
                     Type listType = new TypeToken<List<Recipe>>() {
                     }.getType();
                     mRecipeList = gson.fromJson(response.body().getAsJsonArray(), listType);
-
-                    if (mListView != null) {
-                        setRecipeList();
-                        scrollListener.resetState();
-                    } else if (mRecipeGridView != null) {
-                        mGridAdapter = new GridAdapter(MainActivity.this, mRecipeList);
-                        mRecipeGridView.setAdapter(mGridAdapter);
-                        mGridAdapter.notifyDataSetChanged();
-                    }
+                    initUI();
                     showProgress(false);
-
+                    //used for Espresso tests, set mIdlingResource to idle after download is finished
                     if (mIdlingResource != null) {
                         mIdlingResource.setIdleState(true);
                     }
@@ -191,7 +177,25 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         // Get the IdlingResource instance
         getIdlingResource();
 
-        setTitle(getString(R.string.recipe_activity_title));
+        if (isClickFromWidget) {
+            setTitle(getString(R.string.recipe_widget_title));
+        } else {
+            setTitle(getString(R.string.recipe_activity_title));
+        }
+    }
+
+    /**
+     * Init listview (phone) or gridview (tablet) given a list of recipes
+     */
+    private void initUI() {
+        if (mListView != null) {
+            setRecipeList();
+            scrollListener.resetState();
+        } else if (mRecipeGridView != null) {
+            mGridAdapter = new GridAdapter(MainActivity.this, mRecipeList);
+            mRecipeGridView.setAdapter(mGridAdapter);
+            mGridAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -201,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     }
 
     /**
-     * Method that updates adapter with more notification from database given a 'page' value
+     * Method that updates adapter with more recipes from recipe list given a 'page' value
      *
      * @param page
      */
@@ -210,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     }
 
     /**
-     * show or hide progress spinner while login
+     * show or hide progress spinner while getting recipes from server
      *
      * @param show
      */
@@ -241,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
 
     public void onRecipeSelected(Recipe recipe) {
         if (isClickFromWidget) {
-            Log.d(TAG, "widget + clicked_recipe");
+            Log.d(TAG, "widget selected recipe " + recipe.getId());
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
             BakingWidgetProvider.updateAppWidget(this, appWidgetManager, mWidgetId, recipe);
             finish();

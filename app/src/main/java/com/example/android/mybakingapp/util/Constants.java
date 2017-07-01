@@ -12,9 +12,5 @@ public class Constants {
     public static final String CURRENT_RECIPE = "current_recipe";
     public static final String RECIPE_LIST = "recipe_list";
     public static final String INGREDIENT_LIST = "ingredient_list";
-    public static final String INGREDIENT_ITEM = "ingredient_item";
-    public static final String RECIPE_KEY = "recipe_key";
-    public static final String RECIPE_LIST_FRAGMENT = "recipe_list_fragment";
-    public static final String RECIPE_GIRD_FRAGMENT = "recipe_grid_fragment";
 }
 

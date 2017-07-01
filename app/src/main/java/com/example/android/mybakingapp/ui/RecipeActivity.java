@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by ltorres on 28/06/2017.
+ * Activity that shows all details of a Recipe (phone) but for tablets also show the player fragment like two panels
  */
 
 public class RecipeActivity extends AppCompatActivity implements RecipeFragment.TwoPanelStepClickListener {

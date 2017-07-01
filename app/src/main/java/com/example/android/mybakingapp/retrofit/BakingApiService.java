@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 /**
- * Created by Luis on 29/06/2017.
+ * Interface used by Retrofit to load all recipes (baking.json) from server
  */
 
 public interface BakingApiService {

@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/recipe_component_margin"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardCornerRadius="2dp"
-        card_view:contentPadding="10dp">
+        card_view:cardCornerRadius="@dimen/recipe_component_card_radius"
+        card_view:contentPadding="@dimen/recipe_component_content_padding">
 
         <RelativeLayout
             android:id="@+id/relative_card_view"
@@ -24,8 +24,8 @@
 
             <ImageView
                 android:id="@+id/imgRecipeImg"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/recipe_img_size"
+                android:layout_height="@dimen/recipe_img_size"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_local_dining_black_48dp" />
@@ -36,9 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:maxLines="@integer/recipe_name_max_lines"
+                android:textColor="@color/recipe_name_text_color"
+                android:textSize="@dimen/recipe_name_text_size"
                 tools:text="Nutella Pie" />
 
             <TextView
@@ -48,9 +48,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/imgRecipeImg"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:maxLines="@integer/recipe_name_max_lines"
+                android:textColor="@color/recipe_name_text_color"
+                android:textSize="@dimen/recipe_servings_text_size"
                 tools:text="8 pessoas" />
 
         </RelativeLayout>

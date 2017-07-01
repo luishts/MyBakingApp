@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.adapter.IngredientAdapter;
 import com.example.android.mybakingapp.adapter.StepsAdapter;
+import com.example.android.mybakingapp.component.CustomRecyclerView;
 import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.util.Util;
 
@@ -24,11 +25,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import component.CustomRecyclerView;
 
 
 /**
- * Created by ltorres on 8/22/2016.
+ * Fragment that displays all the steps of a given Recipe. When a step is clicked at phone device,
+ * StepDetailActivity is called but when a step is clicked from a tablet, just update the
+ * ExoPlayer that is shown in the other fragment
  */
 public class RecipeFragment extends Fragment implements StepsAdapter.StepClickListener {
 
@@ -138,10 +140,12 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
         }
     }
 
+    //callback for tablets, update the player fragment with new step
     public interface TwoPanelStepClickListener {
         void onStepTwoPanelSelected(int position);
     }
 
+    //tablet callback for exoplayer video
     public void setStepClickListener(TwoPanelStepClickListener twoPanelStepClickListener) {
         this.mTwoPanelStepClickListener = twoPanelStepClickListener;
     }

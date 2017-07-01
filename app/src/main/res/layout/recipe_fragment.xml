@@ -4,27 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingTop="8dp">
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/recipe_component_margin"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        card_view:cardCornerRadius="2dp"
-        card_view:contentPadding="10dp">
+        card_view:cardCornerRadius="@dimen/recipe_component_card_radius"
+        card_view:contentPadding="@dimen/recipe_component_content_padding">
 
         <TextView
             android:id="@+id/ingredients_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_gravity="center_horizontal"
-            android:text="Ingredients" />
+            android:layout_gravity="center_horizontal" />
 
     </android.support.v7.widget.CardView>
 
@@ -33,16 +31,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginBottom="@dimen/recipe_component_margin"
+        android:layout_marginEnd="@dimen/recipe_component_margin"
+        android:layout_marginLeft="@dimen/recipe_component_margin"
+        android:layout_marginRight="@dimen/recipe_component_margin"
+        android:layout_marginStart="@dimen/recipe_component_margin"
         android:visibility="visible"
-        card_view:cardCornerRadius="2dp"
-        card_view:contentPadding="10dp">
+        card_view:cardCornerRadius="@dimen/recipe_component_card_radius"
+        card_view:contentPadding="@dimen/recipe_component_content_padding">
 
-        <component.CustomRecyclerView
+        <com.example.android.mybakingapp.component.CustomRecyclerView
             android:id="@+id/ingredient_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -55,12 +53,12 @@
 
     </android.support.v7.widget.CardView>
 
-    <component.CustomRecyclerView
+    <com.example.android.mybakingapp.component.CustomRecyclerView
         android:id="@+id/step_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/card_view"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/step_list_margin_top"
         android:scrollbars="vertical" />
 
     <ViewStub

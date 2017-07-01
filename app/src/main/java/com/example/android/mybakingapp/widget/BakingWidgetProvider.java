@@ -1,4 +1,4 @@
-package com.example.android.mybakingapp;
+package com.example.android.mybakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Ingredient;
 import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.ui.MainActivity;
@@ -26,13 +27,14 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                        int appWidgetId, Recipe recipe) {
 
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
         Intent intent;
 
         if (recipe != null) {
+            //if there is a recipe set, send user to RecipeActivity showing all details of recipe set
             intent = new Intent(context, RecipeActivity.class);
             intent.putExtra(context.getString(R.string.recipe_key), recipe);
+            //setup listview 'adapter'
             Intent adapterIntent = new Intent(context, BakingWidgetAdapterService.class);
             adapterIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId), null));
             ArrayList ingredientArray = new ArrayList<>();
@@ -43,10 +45,12 @@ public class BakingWidgetProvider extends AppWidgetProvider {
             }
             adapterIntent.putStringArrayListExtra(Constants.INGREDIENT_LIST, ingredientArray);
             views.setRemoteAdapter(R.id.widget_listView, adapterIntent);
+            ////setup listview 'adapter'
             views.setViewVisibility(R.id.widget_listView, View.VISIBLE);
             views.setViewVisibility(R.id.empty_view, View.GONE);
             views.setTextViewText(R.id.recipe_title, recipe.getName());
         } else {
+            //if there is no recipe set, send user to MainActivity to pick one
             intent = new Intent(context, MainActivity.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             views.setViewVisibility(R.id.widget_listView, View.GONE);
@@ -66,7 +70,6 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, null);
         }
@@ -83,12 +86,12 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+
     }
 }
 
