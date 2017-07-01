@@ -5,47 +5,61 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.example.android.mybakingapp.model.Ingredient;
+import com.example.android.mybakingapp.model.Recipe;
 import com.example.android.mybakingapp.ui.MainActivity;
+import com.example.android.mybakingapp.ui.RecipeActivity;
+import com.example.android.mybakingapp.util.Constants;
+
+import java.util.ArrayList;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class BakingWidgetProvider extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                       int appWidgetId, Recipe recipe) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Intent intent;
 
-        if (preferences.contains(context.getString(R.string.widget_ingredients))) {
+        if (recipe != null) {
+            intent = new Intent(context, RecipeActivity.class);
+            intent.putExtra(context.getString(R.string.recipe_key), recipe);
             Intent adapterIntent = new Intent(context, BakingWidgetAdapterService.class);
+            adapterIntent.setData(Uri.fromParts("content", String.valueOf(appWidgetId), null));
+            ArrayList ingredientArray = new ArrayList<>();
+            String ingredientText;
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                ingredientText = ingredient.getQuantity() + " " + ingredient.getMeasure() + " of " + ingredient.getIngredient();
+                ingredientArray.add(ingredientText);
+            }
+            adapterIntent.putStringArrayListExtra(Constants.INGREDIENT_LIST, ingredientArray);
             views.setRemoteAdapter(R.id.widget_listView, adapterIntent);
             views.setViewVisibility(R.id.widget_listView, View.VISIBLE);
             views.setViewVisibility(R.id.empty_view, View.GONE);
+            views.setTextViewText(R.id.recipe_title, recipe.getName());
         } else {
+            intent = new Intent(context, MainActivity.class);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             views.setViewVisibility(R.id.widget_listView, View.GONE);
             views.setViewVisibility(R.id.empty_view, View.VISIBLE);
         }
-        views.setViewVisibility(R.id.widget_listView, View.VISIBLE);
-        views.setViewVisibility(R.id.empty_view, View.GONE);
 
-        Intent intent = new Intent(context, MainActivity.class);
         final Bundle bundle = new Bundle();
         bundle.putBoolean(context.getString(R.string.widget_click), Boolean.TRUE);
+        bundle.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.putExtras(bundle);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setPendingIntentTemplate(R.id.widget_listView, pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
-        //views.setTextViewText(R.id.appwidget_text, widgetText);
-        // Instruct the widget manager to update the widget
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_listView);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -54,7 +68,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager, appWidgetId, null);
         }
     }
 
@@ -62,7 +76,8 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-            updateAppWidget(context, AppWidgetManager.getInstance(context), intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0));
+            updateAppWidget(context, AppWidgetManager.getInstance(context),
+                    intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0), null);
         }
     }
 
