@@ -2,6 +2,7 @@ package com.example.android.mybakingapp.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -90,15 +91,14 @@ public class StepDetailActivity extends AppCompatActivity {
     private void initUI() {
         setTitle(mRecipe.getName());
         setupButtons();
-        mPlayerFragment = new PlayerFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(getString(R.string.step_key), mCurrentStep);
-        mPlayerFragment.setArguments(bundle);
+        FragmentManager fm = getSupportFragmentManager();
+        mPlayerFragment = (PlayerFragment) fm.findFragmentByTag(Constants.TAG_PLAYER_FRAGMENT);
+        if (mPlayerFragment == null) {
+            mPlayerFragment = PlayerFragment.newInstance(mCurrentStep);
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.player_container, mPlayerFragment)
-                .addToBackStack(null)
+                .replace(R.id.player_container, mPlayerFragment, Constants.TAG_PLAYER_FRAGMENT)
                 .commit();
-
     }
 
     @Optional

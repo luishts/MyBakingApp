@@ -17,6 +17,7 @@ import com.example.android.mybakingapp.adapter.IngredientAdapter;
 import com.example.android.mybakingapp.adapter.StepsAdapter;
 import com.example.android.mybakingapp.component.CustomRecyclerView;
 import com.example.android.mybakingapp.model.Recipe;
+import com.example.android.mybakingapp.util.Constants;
 import com.example.android.mybakingapp.util.Util;
 
 import java.util.Arrays;
@@ -78,11 +79,17 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
         mTwoPanelMode = getResources().getBoolean(R.bool.twoPaneMode);
 
+        if (savedInstanceState != null) {
+            mCurrentStep = savedInstanceState.getInt(Constants.CURRENT_STEP_POSITION);
+        } else {
+            mCurrentStep = -1;
+        }
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             mRecipe = bundle.getParcelable(getString(R.string.recipe_key));
         }
-        mCurrentStep = -1;
+
         mStepAdapter = new StepsAdapter(getActivity(), Arrays.asList(mRecipe.getSteps()));
         mStepAdapter.setStepClickListener(this);
 
@@ -133,6 +140,12 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
             cardViewMain.setLayoutParams(Util.getLayoutParamsVisible(getContext()));
             cardViewDetail.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.CURRENT_STEP_POSITION, mCurrentStep);
     }
 
     @Override

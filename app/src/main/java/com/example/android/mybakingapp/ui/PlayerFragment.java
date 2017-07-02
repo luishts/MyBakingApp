@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Step;
+import com.example.android.mybakingapp.util.Constants;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -84,11 +84,12 @@ public class PlayerFragment extends Fragment {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        if (savedInstanceState != null) {
+            mCurrentStep = savedInstanceState.getParcelable(Constants.CURRENT_STEP);
+            mLastPosition = savedInstanceState.getLong(Constants.LAST_POSITION);
+            initializeUI();
+        }
     }
 
     @Override
@@ -107,15 +108,31 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.CURRENT_STEP, mCurrentStep);
+        outState.putLong(Constants.LAST_POSITION, mLastPosition);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (mExoPlayer != null) {
+            mLastPosition = mExoPlayer.getCurrentPosition();
+        }
+        releasePlayer();
+
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-        mLastPosition = mExoPlayer.getCurrentPosition();
         releasePlayer();
     }
 
@@ -123,6 +140,7 @@ public class PlayerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         initializeUI();
+
     }
 
     private void initializeUI() {
@@ -169,7 +187,7 @@ public class PlayerFragment extends Fragment {
                 mExoPlayer.seekTo(mLastPosition);
             }
 
-            mExoPlayer.setPlayWhenReady(true);
+            //mExoPlayer.setPlayWhenReady(true);
         }
     }
 

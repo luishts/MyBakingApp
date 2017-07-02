@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewStub;
+import android.widget.TextView;
 
 import com.example.android.mybakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.mybakingapp.R;
@@ -21,8 +23,10 @@ import com.example.android.mybakingapp.adapter.RecipeListAdapter;
 import com.example.android.mybakingapp.component.CustomRecyclerView;
 import com.example.android.mybakingapp.component.EndlessRecyclerViewScrollListener;
 import com.example.android.mybakingapp.model.Recipe;
+import com.example.android.mybakingapp.receiver.ConnectivityUtil;
 import com.example.android.mybakingapp.retrofit.BakingApiService;
 import com.example.android.mybakingapp.util.Constants;
+import com.example.android.mybakingapp.util.Util;
 import com.example.android.mybakingapp.widget.BakingWidgetProvider;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -61,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     public CustomRecyclerView mListView;
     private RecipeListAdapter mAdapter;
     private EndlessRecyclerViewScrollListener scrollListener;
+
+    @Nullable
+    @BindView(R.id.error)
+    public TextView errorView;
 
     private final int MAX_RECIPE_PER_PAGE = 10;
 
@@ -137,33 +145,39 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
             mRecipeList = savedInstanceState.getParcelableArrayList(Constants.RECIPE_LIST);
             initUI();
         } else {
-            //used for Espresso tests, set mIdlingResource to busy while downloading recipes list
-            if (mIdlingResource != null) {
-                mIdlingResource.setIdleState(false);
-            }
-            showProgress(true);
-            BakingApiService bakingApiService = BakingApiService.retrofit.create(BakingApiService.class);
-            Call<JsonArray> jsonCall = bakingApiService.recipesJson();
-            jsonCall.enqueue(new Callback<JsonArray>() {
-                @Override
-                public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<Recipe>>() {
-                    }.getType();
-                    mRecipeList = gson.fromJson(response.body().getAsJsonArray(), listType);
-                    initUI();
-                    showProgress(false);
-                    //used for Espresso tests, set mIdlingResource to idle after download is finished
-                    if (mIdlingResource != null) {
-                        mIdlingResource.setIdleState(true);
+            if (isConnected()) {
+                errorView.setVisibility(View.GONE);
+                //used for Espresso tests, set mIdlingResource to busy while downloading recipes list
+                if (mIdlingResource != null) {
+                    mIdlingResource.setIdleState(false);
+                }
+                showProgress(true);
+                BakingApiService bakingApiService = BakingApiService.retrofit.create(BakingApiService.class);
+                Call<JsonArray> jsonCall = bakingApiService.recipesJson();
+                jsonCall.enqueue(new Callback<JsonArray>() {
+                    @Override
+                    public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<List<Recipe>>() {
+                        }.getType();
+                        mRecipeList = gson.fromJson(response.body().getAsJsonArray(), listType);
+                        initUI();
+                        showProgress(false);
+                        //used for Espresso tests, set mIdlingResource to idle after download is finished
+                        if (mIdlingResource != null) {
+                            mIdlingResource.setIdleState(true);
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<JsonArray> call, Throwable t) {
-                    Log.e(TAG, t.toString());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<JsonArray> call, Throwable t) {
+                        Util.getSnackMessage(findViewById(R.id.main_content), getString(R.string.error_downloading), true).show();
+                        Log.e(TAG, t.toString());
+                    }
+                });
+            } else {
+                errorView.setVisibility(View.VISIBLE);
+            }
         }
 
         // Get the IdlingResource instance
@@ -250,5 +264,10 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     @Override
     public void onRecipeSelected(int position) {
         onRecipeSelected(mRecipeList.get(position));
+    }
+
+    // Method to manually check connection status
+    private boolean isConnected() {
+        return ConnectivityUtil.isConnected(getApplicationContext());
     }
 }

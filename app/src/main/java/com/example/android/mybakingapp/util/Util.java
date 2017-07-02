@@ -2,8 +2,12 @@ package com.example.android.mybakingapp.util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.android.mybakingapp.R;
 
@@ -54,5 +58,22 @@ public class Util {
             e.printStackTrace();
         }
         return uri;
+    }
+
+    public static Snackbar getSnackMessage(View anchor, String message, boolean error) {
+        int color;
+        if (error) {
+            color = Color.RED;
+        } else {
+            color = Color.WHITE;
+        }
+
+        Snackbar snackbar = Snackbar
+                .make(anchor, message, Snackbar.LENGTH_LONG);
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(color);
+        return snackbar;
     }
 }

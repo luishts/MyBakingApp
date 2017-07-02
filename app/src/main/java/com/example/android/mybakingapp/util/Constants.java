@@ -10,7 +10,12 @@ public class Constants {
     public static final long ENDLESS_SCROLL_ANIMATION_TIME = 1000;
     public static final String CURRENT_STEP_POSITION = "current_step_position";
     public static final String CURRENT_RECIPE = "current_recipe";
+    public static final String CURRENT_STEP = "current_step";
+    public static final String LAST_POSITION = "last_position";
     public static final String RECIPE_LIST = "recipe_list";
     public static final String INGREDIENT_LIST = "ingredient_list";
+    public static final String TAG_PLAYER_FRAGMENT = "player_fragment";
+    public static final String TAG_RECIPE_FRAGMENT = "recipe_fragment";
+
 }
 

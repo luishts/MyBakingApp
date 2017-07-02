@@ -15,12 +15,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MyBakingAppTest {
@@ -29,12 +28,15 @@ public class MyBakingAppTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     private IdlingResource mIdlingResource;
+    private MainActivity mActivity;
+    private boolean mIsScreenSw600dp;
 
     // Registers any resource that needs to be synchronized with Espresso before the test is run.
     @Before
     public void registerIdlingResource() {
         mIdlingResource = mActivityTestRule.getActivity().getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
+        mActivity = mActivityTestRule.getActivity();
     }
 
     @Test
@@ -44,21 +46,21 @@ public class MyBakingAppTest {
         onView(withId(R.id.recyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
+
+        onView(withId(R.id.step_list)).perform(RecyclerViewActions.scrollToPosition(0));
+
         // Check is there is a list will all recipe's steps and tries to click at first step
         onView(withId(R.id.step_list))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        // Check if step (0) title matches with "Recipe Introduction"
-        onView(withId(R.id.text_current_step))
-                .check(matches(withText("Recipe Introduction")));
 
-        // Check if it's possible to press home icon and go back to steps activity
-        onView(withContentDescription("Navigate up"))
-                .perform(click());
+        // Check if it's possible to back button icon and go back to steps activity
+        pressBack();
 
-        // Check if it's possible to press home icon and go back to recipe list activity
-        onView(withContentDescription("Navigate up"))
-                .perform(click());
+        if (!mActivity.getResources().getBoolean(R.bool.twoPaneMode)) {
+            // Check if it's possible to press back button and go back to recipe list activity
+            pressBack();
+        }
 
         // Check if we are at main activity and recipe list is being shown
         onView(withId(R.id.recyclerView)).check(matches(isDisplayed()));

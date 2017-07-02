@@ -1,13 +1,16 @@
 package com.example.android.mybakingapp.ui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Recipe;
+import com.example.android.mybakingapp.util.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,25 +51,41 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             mRecipe = getIntent().getParcelableExtra(getString(R.string.recipe_key));
         }
 
-        if (mPlayerContent != null) {
-            //tablet configuration
-            mPlayerFragment = PlayerFragment.newInstance(mRecipe.getSteps()[0]);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(mPlayerContent.getId(), mPlayerFragment)
-                    .addToBackStack(null)
+        FragmentManager fm = getSupportFragmentManager();
+
+        int currentStep = 0;
+        mRecipeFragment = (RecipeFragment) fm.findFragmentByTag(Constants.TAG_RECIPE_FRAGMENT);
+        if (mRecipeFragment == null) {
+            mRecipeFragment = RecipeFragment.newInstance(mRecipe);
+            fm.beginTransaction()
+                    .add(mRecipeContent.getId(), mRecipeFragment, Constants.TAG_RECIPE_FRAGMENT)
                     .commit();
         }
-
-        mRecipeFragment = RecipeFragment.newInstance(mRecipe);
+        mPlayerFragment = (PlayerFragment) fm.findFragmentByTag(Constants.TAG_PLAYER_FRAGMENT);
+        if (mPlayerContent != null) {
+            //tablet configuration
+            if (mPlayerFragment == null) {
+                mPlayerFragment = PlayerFragment.newInstance(mRecipe.getSteps()[0]);
+                fm.beginTransaction()
+                        .add(mPlayerContent.getId(), mPlayerFragment, Constants.TAG_PLAYER_FRAGMENT)
+                        .commit();
+            }
+        }
         if (mTwoPanelMode) {
             mRecipeFragment.setStepClickListener(this);
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(mRecipeContent.getId(), mRecipeFragment)
-                .addToBackStack(null)
-                .commit();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

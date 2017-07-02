@@ -36,7 +36,7 @@
         android:layout_marginLeft="@dimen/recipe_component_margin"
         android:layout_marginRight="@dimen/recipe_component_margin"
         android:layout_marginStart="@dimen/recipe_component_margin"
-        android:visibility="visible"
+        android:visibility="gone"
         card_view:cardCornerRadius="@dimen/recipe_component_card_radius"
         card_view:contentPadding="@dimen/recipe_component_content_padding">
 
