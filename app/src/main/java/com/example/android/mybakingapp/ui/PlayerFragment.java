@@ -41,6 +41,8 @@ public class PlayerFragment extends Fragment {
 
     private boolean mTwoPanelMode;
 
+    private long mLastPosition;
+
     @Nullable
     @BindView(R.id.playerView)
     public SimpleExoPlayerView mPlayerView;
@@ -58,6 +60,14 @@ public class PlayerFragment extends Fragment {
     private Unbinder unbinder;
 
     private Step mCurrentStep;
+
+    public static PlayerFragment newInstance(Step step) {
+        PlayerFragment playerFragment = new PlayerFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("step_key", step);
+        playerFragment.setArguments(args);
+        return playerFragment;
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -99,8 +109,20 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        releasePlayer();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mLastPosition = mExoPlayer.getCurrentPosition();
+        releasePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeUI();
     }
 
     private void initializeUI() {
@@ -142,6 +164,11 @@ public class PlayerFragment extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
+
+            if (mLastPosition != 0) {
+                mExoPlayer.seekTo(mLastPosition);
+            }
+
             mExoPlayer.setPlayWhenReady(true);
         }
     }
@@ -160,6 +187,7 @@ public class PlayerFragment extends Fragment {
     public void changeStep(Step step) {
         releasePlayer();
         mCurrentStep = step;
+        mLastPosition = 0;
         initializeUI();
     }
 

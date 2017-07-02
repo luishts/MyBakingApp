@@ -3,6 +3,7 @@ package com.example.android.mybakingapp.adapter;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.android.mybakingapp.R;
 import com.example.android.mybakingapp.model.Step;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -69,6 +71,13 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
             viewHolder.txtComponentName.setText((step.getId()) + ". " + step.getShortDescription());
         } else {
             viewHolder.txtComponentName.setText(step.getShortDescription());
+        }
+        if (!TextUtils.isEmpty(step.getThumbnailURL())) {
+            Picasso.with(mContext.get())
+                    .load(step.getThumbnailURL())
+                    .placeholder(R.drawable.ic_local_dining_black_48dp)
+                    .error(R.drawable.ic_local_dining_black_48dp)
+                    .into(viewHolder.imgComponentImg);
         }
     }
 

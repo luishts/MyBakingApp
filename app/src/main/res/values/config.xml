@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="bool" name="twoPaneMode">false</item>
+    <item name="twoPaneMode" type="bool">false</item>
+    <item name="tabletMode" type="bool">false</item>
 </resources>

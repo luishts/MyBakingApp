@@ -10,16 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewStub;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.example.android.mybakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.mybakingapp.R;
-import com.example.android.mybakingapp.adapter.GridAdapter;
 import com.example.android.mybakingapp.adapter.RecipeListAdapter;
 import com.example.android.mybakingapp.component.CustomRecyclerView;
 import com.example.android.mybakingapp.component.EndlessRecyclerViewScrollListener;
@@ -52,15 +49,12 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
     private Handler mHandler;
     private ProgressDialog mProgressDialog;
 
+    private boolean mTabletMode;
+
     private int mWidgetId;
     private boolean isClickFromWidget;
 
     private ArrayList<Recipe> mRecipeList;
-
-    @Nullable
-    @BindView(R.id.gridview)
-    public GridView mRecipeGridView;
-    private GridAdapter mGridAdapter;
 
     @Nullable
     @BindView(R.id.recyclerView)
@@ -92,19 +86,19 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        mTabletMode = getResources().getBoolean(R.bool.tabletMode);
+
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getBoolean(getString(R.string.widget_click))) {
             isClickFromWidget = true;
             mWidgetId = getIntent().getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
         }
 
-        if (mListView != null) {
-            mHandler = new Handler();
-            mAdapter = new RecipeListAdapter(this, mRecipeList);
-            mAdapter.setRecipeClickListener(this);
-
+        if (mTabletMode) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
+            mListView.setLayoutManager(gridLayoutManager);
+        } else {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             mListView.setLayoutManager(linearLayoutManager);
-            mListView.getLayoutManager().setAutoMeasureEnabled(true);
             scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
                 @Override
                 public void onLoadMore(final int page, int totalItemCount) {
@@ -126,20 +120,18 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
             scrollListener.setVisibleThreshold(3);
             // Adds the scroll listener to RecyclerView
             mListView.addOnScrollListener(scrollListener);
-
-            ViewStub stubView = (ViewStub) findViewById(R.id.stub);
-            stubView.setLayoutResource(R.layout.empty_recipe);
-            mListView.setEmptyView(stubView);
-            mListView.setAdapter(mAdapter);
-
-        } else if (mRecipeGridView != null) {
-            mRecipeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    onRecipeSelected(mRecipeList.get(position));
-                }
-            });
         }
+
+        mHandler = new Handler();
+        mAdapter = new RecipeListAdapter(this, mRecipeList);
+        mListView.setHasFixedSize(true);
+        mAdapter.setRecipeClickListener(this);
+        mListView.getLayoutManager().setAutoMeasureEnabled(true);
+
+        ViewStub stubView = (ViewStub) findViewById(R.id.stub);
+        stubView.setLayoutResource(R.layout.empty_recipe);
+        mListView.setEmptyView(stubView);
+        mListView.setAdapter(mAdapter);
 
         if (savedInstanceState != null) {
             mRecipeList = savedInstanceState.getParcelableArrayList(Constants.RECIPE_LIST);
@@ -182,19 +174,18 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         } else {
             setTitle(getString(R.string.recipe_activity_title));
         }
+
     }
 
     /**
-     * Init listview (phone) or gridview (tablet) given a list of recipes
+     * Init listview (phone) given a list of recipes
      */
     private void initUI() {
-        if (mListView != null) {
-            setRecipeList();
+        if (mTabletMode) {
+            mAdapter.setModels(mRecipeList);
+        } else {
             scrollListener.resetState();
-        } else if (mRecipeGridView != null) {
-            mGridAdapter = new GridAdapter(MainActivity.this, mRecipeList);
-            mRecipeGridView.setAdapter(mGridAdapter);
-            mGridAdapter.notifyDataSetChanged();
+            setRecipeList();
         }
     }
 

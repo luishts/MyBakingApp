@@ -64,6 +64,14 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
     private IngredientAdapter mIngredientAdapter;
 
+    public static RecipeFragment newInstance(Recipe recipe) {
+        RecipeFragment recipeFragment = new RecipeFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("recipe_key", recipe);
+        recipeFragment.setArguments(args);
+        return recipeFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

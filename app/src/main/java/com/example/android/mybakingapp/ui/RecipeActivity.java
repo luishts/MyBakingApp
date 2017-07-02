@@ -48,24 +48,19 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             mRecipe = getIntent().getParcelableExtra(getString(R.string.recipe_key));
         }
 
-        Bundle bundle = new Bundle();
         if (mPlayerContent != null) {
             //tablet configuration
-            bundle.putParcelable(getString(R.string.step_key), mRecipe.getSteps()[0]);
-            mPlayerFragment = new PlayerFragment();
-            mPlayerFragment.setArguments(bundle);
+            mPlayerFragment = PlayerFragment.newInstance(mRecipe.getSteps()[0]);
             getSupportFragmentManager().beginTransaction()
                     .replace(mPlayerContent.getId(), mPlayerFragment)
                     .addToBackStack(null)
                     .commit();
         }
 
-        bundle.putParcelable(getString(R.string.recipe_key), mRecipe);
-        mRecipeFragment = new RecipeFragment();
+        mRecipeFragment = RecipeFragment.newInstance(mRecipe);
         if (mTwoPanelMode) {
             mRecipeFragment.setStepClickListener(this);
         }
-        mRecipeFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(mRecipeContent.getId(), mRecipeFragment)
                 .addToBackStack(null)
